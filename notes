@@ -1,0 +1,153 @@
+The commas that separate function arguments, variables in declerations, etc., are
+not comma operators, and do guarantee left to right evaluation.
+
+each function definition has the form:
+	
+	return-type function-name(argument decleration) {
+		declarations and statements;
+	}
+
+"A program is just a set of definitions of variables and functions."
+
+A functions return value defaults to int if not specified by programmer.
+Any expression can follow return:   return (expression);
+
+4.3 EXTERNAL VARIABLES:
+
+"A C program consists of a set of external objects, which are either variables
+or functions. The adjective "external" is used in contrasts with "internal",
+which describes the arguments and variables defined inside functions."
+
+External variables are defined outside of any function, and are thus potentially 
+available to many functions. Automatic variables are internal to a function.
+
+Because external variables are globally accessible, the provide an alternative
+to function arguments and return values for communicating data between functions.
+
+5.1 POINTERS:
+
+Unary operators like * and ++ associate right to left. (* in the context of pointer.)
+
+Since pointers are variables, they can be used without dereferencing. For example,
+if iq is a pointer to int,
+		iq = ip
+copies the contents of ip into iq, thus making iq point to whatever ip pointed to.
+
+ARRAY:
+
+In C, a two-dimensional array is really a one dimensional array, each of whose elements 
+is an array. Hence subscripts are written as daytab[i][j] rather than daytab[i,j].
+
+COMMAND LINE ARGUMENTS:
+
+By convention, argv[0] is the name by which the program was invoked, so argc is at least 1.
+If argc is 1, there are no command-line arguments after the program name. In the example,
+argc is 3, and argv[0], argv[1], and argv[2] are "echo", "hello,", and "world" respectively.
+The first optional argument is argv[1] and the last is argv[argc-1]; additionally, the 
+standard requires that argv[argc] be a null pointer.
+
+COMPLICATED DECLERATIONS:
+
+dcl (dcl is short of declaration)
+
+dcl example outputs:
+
+char **argv
+	argv:  pointer to char
+int (*daytab)[13]
+	daytab:  pointer to array[13] of int
+int *daytab[13]
+	daytab:  array[13] of pointer to int	
+void *comp()
+	comp:  pointer to function returning void
+char (*(*x())())()
+	x:  function returning pointer to array[] of
+	pointer to function returing char 
+char (*(*x[3])())[5]
+	x:  array[3] of pointer to function returning 
+	pointer to array[5] of char
+
+dcl is based on the grammar that specifies a declarator, which is spelled out precisely 
+in Appendix A, Section 8.5; this is the simplest form:
+
+
+dcl:		optional *'s direct-del
+direct-dcl: 	name | (dcl) | direct-dcl() | direct-dcl[optional size]
+
+
+In words, a dcl is a direct-dcl, perhaps preceded by *'s. A direct-dcl is a name, or
+a paraenthesized dcl, or a direct-dcl followed by parentheses, or a direct-dcl followed
+by brackets with an optional size.
+
+STRUCTURES:
+
+If a large structure is to be passed to a function, it is generally more efficient to pass a pointerthan to copy the whole structure. Structure pointers are just like pointers to ordinary variables.
+
+The declaration: struct point *pp; 
+says that pp is a pointer to a structure of type struct point. If pp points to a point structure,
+*pp is the structure, and (*pp).x and (*pp).y are the members. To use pp, we might write, for 
+example,
+	struct point origin, *pp;
+	pp = &origin;
+	printf("origin is (%d, %d)\n", (*pp).x, (*pp).y);
+The parantheses are necessary in (*pp).x because the precedence of the structure member operator
+'.' is higher than '*'. The expression *pp.x means *(pp.x), which is illegal here because x is 
+not a pointer.
+
+Pointers to structures are so frequently used that an alternative notation is provided as a 
+shorthand. If p is a pointer to a structure, then
+	p->member-of-structure
+refers to the particular member.
+
+So we could instead write 
+	printf("origin is (%d, %d)\n" p->x, p->y);
+
+Both . and -> associate left to right, so if we have 
+	struct rect r, *rp = &r;
+then these four expressions are equivalent:
+	r.pt1.x
+	rp->pt1.x
+	(r.pt1).x
+	(rp->pt1).x
+
+The structure operators . and ->, together with () for function calls and [] for subscripts, are at the top of the precedence hierarchy and thus bind very tightly. For example, given the declaration:
+	struct {
+		int len;
+		char *str;
+	} *p;
+then
+	++p->len
+increments len, not p, because the implied parenthesization is ++(p->len). Parentheses can be used
+alter binding: (++p)->len increments p before accessing len, and (p++)->len increments p afterward.
+(This last set of parantheses is unnecessary.) 
+
+In the same way, *p->str fetches whatever str points to; *p->str++ increments str after accessing 
+whatever it points to (just like *s++); (*p->str)++ increments whatever str points to; and
+*p++->str increments p after accessing what str points to.
+
+
+sizeof OPERATOR:
+	C provides a compile-time unary operator called sizeof that can be used to compute the 
+size of any object. The expressions
+
+	sizeof object
+and
+	sizeof (type name)
+
+yield an integer equal to the size of the specified object or type in bytes. (Strictly, sizeof
+proudces an unsigned integer value whose type, size_t, is defined in the header <stddef.h>.)
+An object can be a variable or array or structure. A type name can be the name of a basic type
+like int or double, or a derived type like a structure or a pointer.
+
+
+
+
+
+
+
+
+
+
+
+
+	
