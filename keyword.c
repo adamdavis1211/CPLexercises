@@ -5,6 +5,9 @@
 #define MAXWORD 100
 #define NKEYS (sizeof keytab / sizeof keytab[0])
 
+/* Our viersion of getword does not properly handle underscores, string constants,
+ * comments, or preprocessor control lines. Write a better version. */
+
 struct key {
 	char *word;
 	int count;
@@ -85,5 +88,29 @@ int getword(char *word, int lim)
 			break;
 		}
 	*w = '\0';
+	printf("%s\n", word);
 	return word[0];
 }
+
+int mygetword(char *word, int lim)
+{
+	int c;
+	char *w = word;
+
+	while (isspace(c = getch()))
+		;
+	if (c != EOF)
+		*w++ = c;
+	if (c == '"') {
+		while ((c = getch()) != '"')
+			*w++ = c;
+		*w = '\0';
+		return c;
+	}
+	for ( ; --lim > 0; w++)
+		if (
+
+
+
+
+
