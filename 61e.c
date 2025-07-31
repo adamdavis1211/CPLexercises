@@ -16,7 +16,6 @@ struct key {
 	"break", 0,
 	"case", 0,
 	"char", 0,
-	"char", 0,
 	"const", 0,
 	"continue", 0,
 	"default", 0,
@@ -68,7 +67,7 @@ int binsearch(char *word, struct key tab[], int n)
 
 #include "ch.h"
 /* getword:  get next word or character from input */
-int getword(char *word, int lim)
+/* int getword(char *word, int lim)
 {
 	int c, getch(void);
 	void ungetch(int);
@@ -90,27 +89,57 @@ int getword(char *word, int lim)
 	*w = '\0';
 	printf("%s\n", word);
 	return word[0];
-}
+} */
 
-int mygetword(char *word, int lim)
+int getword(char *word, int lim)
 {
 	int c;
 	char *w = word;
 
 	while (isspace(c = getch()))
 		;
+
+	switch (c) {
+	case '"':
+		while (getch() != '"')
+			;
+		break;
+	case '#':
+		while (getch() != '\n')
+			;
+		break;
+	case '/': 
+		if ((c = getch()) == '*') 
+			for ( ; (c = getch()) != EOF; )
+				if (c == '*') {
+				       if ((c = getch()) == '/')
+						break;
+				       else
+					       ungetch(c);
+				}
+		else {
+			ungetch('/');
+			ungetch(c);
+			break;
+		}
+	}
+	if (isspace(c))
+		while (isspace(c = getch()))
+			;
 	if (c != EOF)
 		*w++ = c;
-	if (c == '"') {
-		while ((c = getch()) != '"')
-			*w++ = c;
+	if (!isalpha(c) && c != '_') {
 		*w = '\0';
 		return c;
 	}
 	for ( ; --lim > 0; w++)
-		if (
-
-
-
+		if (!isalnum(*w = getch()) && *w != '_') {
+			ungetch(*w);
+			break;
+		}
+	*w = '\0';
+	printf("%s\n", word);
+	return word[0];
+}
 
 

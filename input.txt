@@ -1,0 +1,13 @@
+int main() {
+    int iflag = 0;             /* variable name, not the keyword "if" */
+    char *s = "while if for";  /* string literal containing keywords */
+    /* This comment includes else and return */
+    if (1) {                   /* real keyword */
+        for (int i = 0; i < 10; i++) {
+            continue;          /* real keyword */
+        }
+    }
+    char c = 'f';              /* character constant with a keyword letter */
+    return 0;                  /* real keyword */
+}
+
