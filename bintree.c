@@ -1,3 +1,4 @@
+#include <stdlib.h>
 #include <stdio.h>
 #include <ctype.h>
 #include <string.h>
@@ -9,9 +10,9 @@ struct tnode {		/* the tree node */
 	int count;	/* number of occurrences */
 	struct tnode *left;	/* left child */
 	struct tnode *right;	/* right child */
-}
+};
 
-struct tnode *addtree(struct node *, char *);
+struct tnode *addtree(struct tnode *, char *);
 void treeprint(struct tnode *);
 int getword(char *, int);
 
@@ -30,16 +31,16 @@ int main()
 }
 
 struct tnode *talloc(void);
-char *strdup(char *);
+char *mystrdup(char *);
 
 /* addtree:  add a node with w, at or below p */
-struct treenode *addtree(struct tnode *p, char *w)
+struct tnode *addtree(struct tnode *p, char *w)
 {
 	int cond;
 
 	if (p == NULL) {	/* a new word has arrived */
 		p = talloc();	/* make a new node */
-		p->word = strdup(w);	
+		p->word = mystrdup(w);	
 		p->count = 1;
 		p->left = p->right = NULL;
 	} else if ((cond = strcmp(w, p->word)) == 0)
@@ -67,7 +68,7 @@ struct tnode *talloc(void)
 	return (struct tnode *) malloc(sizeof(struct tnode));
 }
 
-char *strdup(char *s)
+char *mystrdup(char *s)
 {
 	char *p;
 

@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <ctype.h>
 #include "ch.h"
+#include "getword.h"
 
 int getword(char *word, int lim)
 {
