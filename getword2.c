@@ -1,7 +1,14 @@
 #include <stdio.h>
 #include <ctype.h>
+#include <string.h>
 #include "ch.h"
-#include "getword.h"
+#include "getword2.h"
+
+#define TYPES 2
+
+extern int type;
+
+char *types[] = { "int", "char" };
 
 int getword(char *word, int lim)
 {
@@ -23,10 +30,15 @@ int getword(char *word, int lim)
 	}
 	for ( ; --lim > 0; w++)
 		if (!isalnum(*w = getch()) && *w != '_') {
+			if (*w == ';')
+				type = LASTNAME;
 			ungetch(*w);
 			break;
 		}
 	*w = '\0';
+	for (c = 0; c < TYPES; c++) 
+		if (strcmp(word, types[c]) == 0)
+			type = NAME;
 	return word[0];
 }
 

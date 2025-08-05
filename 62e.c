@@ -2,7 +2,7 @@
 #include <string.h>
 #include <ctype.h>
 #include <stdlib.h>
-#include "getword.h"
+#include "getword2.h"
 
 #define MAXWORD 100
 /* Exercise 6-2. Write a program that reads a C program and prints in alphabetical order each
@@ -19,17 +19,19 @@ struct tnode {		/* the tree node */
 	struct tnode *rightrel;		/* right child (related word) */
 };
 
+int type;
 struct tnode *talloc(void);
 struct tnode *findrelated(struct tnode *p, char *w, int charno);
 struct tnode *findposition(struct tnode *p, char *w);
 char *mystrdup(char *s);
 void printsubtree(struct tnode *p);
+void printtree(struct tnode *p);
 
 int main(int argc, char *argv[])
 {
 	struct tnode *root;
 	char word[MAXWORD];
-	int nochar;
+	int nochar, i, cond = 0;
 
 	if (argc > 1)
 		nochar = atoi(argv[1]+1);
@@ -37,10 +39,13 @@ int main(int argc, char *argv[])
 		nochar = 6;
 
 	root = NULL;
-	while (getword(word, MAXWORD) != EOF)
-		if (isalpha(word[0]))
-			root = findrelated(root, word, nochar);
-	
+	while (getword(word, MAXWORD) != EOF) {
+		if (type == NAME)
+			while (type != LASTNAME && getword(word, MAXWORD) != EOF)
+				if (isalpha(word[0]))
+					root = findrelated(root, word, nochar);
+	}
+	printtree(root);	
 	return 0;
 }
 
@@ -94,6 +99,16 @@ struct tnode *talloc(void)
 	return (struct tnode *) malloc(sizeof(struct tnode));
 }
 
+void printtree(struct tnode *p)
+{
+	if (p == NULL)
+		return;
+	else
+		printtree(p->left);
+	printsubtree(p);
+	putchar('\n');
+	printtree(p->right);
+}
 
 void printsubtree(struct tnode *p)
 {
@@ -101,6 +116,6 @@ void printsubtree(struct tnode *p)
 		return;
 	else
 		printsubtree(p->leftrel);
-	printf("%s\n", p->word);
+	printf("%s ", p->word);
 	printsubtree(p->rightrel);
 }	
