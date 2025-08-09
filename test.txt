@@ -1,2 +1,16 @@
-1 	   2  		3	4                    	5	6	7
-22	 	55	22		    12	321          3	213123              
+#define PI 3.14159
+#define MAX 100
+
+
+int main() {
+    int limit = MAX;
+    double circle = PI * 2;
+    char *msg = HELLO;
+
+    int sum = ADD(3, 4);
+
+    /* This is a comment with MAX inside it — should be ignored */
+    printf("%s\n", msg);
+    return 0;
+}
+
