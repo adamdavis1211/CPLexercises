@@ -140,14 +140,69 @@ An object can be a variable or array or structure. A type name can be the name o
 like int or double, or a derived type like a structure or a pointer.
 
 
+INPUT/OUTPUT
 
+getchar and putchar can be defined in terms of getc, putc, stdin, and strdout, as follows:
 
+#define getchar() 	getc(stdin)
+#define putchar(c)	putc((c), stdout)
 
+For formatted input or output of files, the functions fscanf and fprintf may be used. These
+are identical to scanf and printf, except that the first argument is a file pointer that 
+specifies the file to be read or written; the format string is the second argument.
 
+int fscanf(FILE *fp, char *format, ...)
+int fprintf(FILE *fp, char *format, ...)
 
+The file pointers stdin and stdout are objects of type FILE *. They are constants, however,
+not variables, so it is not possible to assign to them.
 
+The function
+	int fclose(FILE *fp)
+is the inverse of fopen, it breaks the connection between the file pointer and the external
+name that was established by fopen, freeing the file pointer for another file. Since most
+operating systems have some limit on the number of files that a program may have open 
+simultaneously, it's a good idea to free the file pointers when they are no longer needed,
+as we did in cat. There is also another reason for fclose on an output file - it flushes 
+the buffer in which putc is collecting output. fclose is called automatically for each open 
+file when a program terminates normally.
 
+The program signals errors in two ways. First, the diagnostic output produced by fprintf goes 
+to stderr, so it finds its way to the screen instead of disappearing down a pipeline or into
+and output file. We included the program name, from argv[0], in the message, so if this program
+is used with others, the source of an error is identified.
 
+Second, the program uses the standard library function exit, which terminates program execution
+when it is called. The argument of exit is available to whatever process called this one, so the 
+success or failure of the program can be tested by another program that uses this one as a 
+sub-process. Conventionally, a return value of 0 signals that all is well; non-zero values 
+usually signal abnormal situations. exit calls fclose for each open output file, to flush out
+any buffered output.
+
+Within main, return expr is equivalent to exit(expr). exit has the advantage that is can be 
+called from other functions, and that calls to it can be found with a pattern-searching 
+program like those in chapter 5.
+
+The function ferror returns non-zero if an error occured on the stream fp.
+Although output errors are rare, they do occur (for example, if a disk fills up), so a production
+program should check this as well.
+
+LINE INPUT AND OUTPUT:
+
+The standard library provides an input and output routine fgets that is similar to the getline
+function that we have used in previous chapters:
+	char *fgets(char *line, int maxline, FILE *fp)
+fgets reads the next input line (including the newline) from the file fp into the character
+array line; at most maxline-1 characters will be read. The resulting line is terminated with
+'\0'. Normally fgets returns line; on end of file or error it returns NULL. (Our getline 
+returns the line length, which is a more useful value; zero means end of file.)
+
+For output, the function fputs writes a string (which need not contain a newline) to a file:
+	int fputs(char *line, FILE *fp)
+It returns EOF in an error occurs, and non-negative otherwise.
+
+The library functions gets and puts are similar to fgets and fputs, but operate on stdin and stdout.
+Confusingly, gets deletes the terminating '\n', and puts adds it.
 
 
 	
