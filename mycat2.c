@@ -1,7 +1,7 @@
 #include "stdlib.h"
 #include <stdio.h>
 
-/* cat:  concatenate files, verision 2 */
+/* cat:  concatenate files, version 2 */
 int main(int argc, char *argv[])
 {
 	FILE *fp;
