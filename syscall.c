@@ -28,3 +28,14 @@ int my_getcharv2(void)
 	}
 	return (--n >= 0) ? (unsigned char) *bufp++ : EOF;
 }
+
+long lseek(int fd, long offset, int origin);
+
+/* get:  read n bytes from position pos */
+int get(inf fd, long ps, char *buf, int n)
+{
+	if (lseek(fd, pos, 0) >= 0)	/* get to pos */
+		return read(fd, buf, n);
+	else
+		return -1;
+}

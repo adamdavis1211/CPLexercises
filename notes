@@ -205,4 +205,18 @@ The library functions gets and puts are similar to fgets and fputs, but operate 
 Confusingly, gets deletes the terminating '\n', and puts adds it.
 
 
+ABOUT TYPEDEF STUCT FILE AND LIBRARY ROUTINES:
 	
+	Recall that files in the standard library are described by file pointers rather than
+file descriptors. A file pointer is a pointer to a structure that contains several pieces of 
+information about the file: a pointer to a buffer, so the file can be read in large chunks;
+a count of the number of characters left in the buffer; a pointer to the next character 
+position in the buffer; the file descriptor; and flags describing read/write mode, error
+status, etc.
+	The data structure that describes a file is contained in <stdio.h>, which must be 
+included (by #include) in any source file that uses routines from the standard input/output
+library. It is also included by functions in that library. In the following excerpt from a 
+typical <stdio.h>, names that are intended for use only by functions of the library begin
+with an underscore so they are less likely to collide with names in a user's program. This 
+convention is used by all standard library routines.
+
