@@ -69,3 +69,66 @@ int _fillbuf(FILE *fp)
 	}
 	return (unsigned char) *fp->ptr++;
 }
+
+/* _flushbuf:  clear the input buffer */
+int _flushbuf(char c, FILE *fp)
+{
+	int bufsize, used;
+
+	if ((fp->flag & (_WRITE | _EOF | _ERR)) != _WRITE)
+		return EOF;
+	bufsize = (fp->flag & _UNBUF) ? 1 : BUFSIZ;
+	if (fp->flag & _UNBUF) {
+		write(fp->fd, &c, 1);
+		return c;
+	}
+	if (fp->base == NULL) {
+		if ((fp->base = (char *) malloc(bufsize)) == NULL)
+			return EOF;
+		fp->ptr = fp->base;
+	} 
+	used = fp->ptr - fp->base;
+	write(fp->fd, fp->base, used);
+	fp->ptr = fp->base;
+	*fp->ptr++ = c;
+	fp->cnt = bufsize-1;
+	return c;
+}
+
+/* _fflush: clear the input buffer */
+int fflush(FILE *fp)
+{
+	int used, bufsize;
+
+	if ((fp->flag & (_WRITE | _EOF | _ERR)) != _WRITE)
+		return EOF;
+	used = fp->ptr - fp->base;
+	bufsize = (fp->flag & _UNBUF) ? 1 : BUFSIZ;
+	if (bufsize == 1)
+		return 0;
+	if (fp->base == NULL)
+		return 0;
+	if (used == 0) 
+		return 0;
+	else
+		write(fp->fd, fp->base, used);
+	fp->ptr = fp->base;
+	fp->cnt = bufsize; 
+	return 0;
+}
+
+/* _fclose:  close file stream and flush output buffer or discard input buffer */
+int fclose(FILE *fp)
+{
+	int stat = 0, bufsize;
+
+	if (fp->flag & _WRITE)
+		stat = fflush(fp);
+	free(fp->base);
+	close(fp->fd);
+	fp->base = fp->ptr = NULL;
+	fp->cnt = fp->flag = 0;	
+	fp->fd = -1;
+	return (stat == EOF) ?  EOF : stat;
+}
+
