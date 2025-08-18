@@ -120,7 +120,7 @@ int fflush(FILE *fp)
 /* _fclose:  close file stream and flush output buffer or discard input buffer */
 int fclose(FILE *fp)
 {
-	int stat = 0, bufsize;
+	int stat = 0;
 
 	if (fp->flag & _WRITE)
 		stat = fflush(fp);
